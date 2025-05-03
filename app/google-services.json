@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "483507025254",
+    "project_id": "real-time-chat-50c9c",
+    "storage_bucket": "real-time-chat-50c9c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483507025254:android:a80665880aee8700c504a7",
+        "android_client_info": {
+          "package_name": "com.oakil.realtimechatapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS-N5F6Vi2RJF5Wy1wzeta5Vc6oqyINgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
