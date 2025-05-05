@@ -76,4 +76,8 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
 
+    implementation(libs.lottie.compose)
+
+//    implementation("com.airbnb.android.lottie-compose:6.2.0")
+
 }
