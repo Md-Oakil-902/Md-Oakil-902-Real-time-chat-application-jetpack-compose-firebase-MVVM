@@ -1,6 +1,5 @@
 package com.oakil.realtimechatapplication.features.SignIn
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,21 +30,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.oakil.realtimechatapplication.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignInScreen(navController: NavController) {
-    
-    var email by remember{
+
+    val viewModel: SignInViewModel = hiltViewModel()
+    val uiState = viewModel.state.collectAsState()
+
+
+    var email by remember {
         mutableStateOf("")
     }
-    var password by remember{
+    var password by remember {
         mutableStateOf("")
     }
-    
+
     Scaffold(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -61,27 +68,36 @@ fun SignInScreen(navController: NavController) {
                     .background(Color.White)
             )
             OutlinedTextField(
-                value =email,
-                onValueChange = {email = it},
+                value = email,
+                onValueChange = { email = it },
                 placeholder = { Text(text = "Email") },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(text = "Email") })
 
-            OutlinedTextField(value = password,
-                onValueChange = {password = it},
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(text = "Password") },
                 label = { Text(text = "Password") },
-                visualTransformation = PasswordVisualTransformation())
-            Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth(),
-                enabled = email.isNotEmpty() && password.isNotEmpty()
-            ) {
-                Text(text = "Sign In")
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            if (uiState.value == SignInState.Loading) {
+                CircularProgressIndicator()
+            } else {
+                Button(
+                    onClick = {
+                        viewModel.signIn(email, password)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = email.isNotEmpty() && password.isNotEmpty() && (uiState.value == SignInState.Nothing || uiState.value == SignInState.Error)
+                ) {
+                    Text(text = "Sign In")
+                }
             }
             TextButton(onClick = {
-               navController.navigate("signUp")
+                navController.navigate("signUp")
             }) {
                 Text("Have no account? Sign up here..")
             }
