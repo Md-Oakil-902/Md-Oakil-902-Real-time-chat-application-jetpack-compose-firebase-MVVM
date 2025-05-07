@@ -5,32 +5,30 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class SignInViewModel : ViewModel(){
+class SignInViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow<SignInState> (SignInState.Nothing)
+    private val _state = MutableStateFlow<SignInState>(SignInState.Nothing)
     val state = _state.asStateFlow()
 
 
-    fun signIn(email: String, password: String){
+    fun signIn(email: String, password: String) {
         _state.value = SignInState.Loading
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener{
-            task->
-            if(task.isSuccessful){
-                _state.value = SignInState.Success
-            }else{
-                _state.value = SignInState.Error
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result.user != null) {
+                    _state.value = SignInState.Success
+                } else {
+                    _state.value = SignInState.Error
+                }
             }
-        }
-        _state.value = SignInState.Success
     }
-
 }
 
-
-sealed class SignInState{
-    object Nothing: SignInState()
-    object Success: SignInState()
+sealed class SignInState {
+    object Nothing : SignInState()
+    object Success : SignInState()
     object Error : SignInState()
     object Loading : SignInState()
 }

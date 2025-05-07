@@ -8,17 +8,25 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.oakil.realtimechatapplication.features.Home.HomeScreen
 import com.oakil.realtimechatapplication.features.SignIn.SignInScreen
 import com.oakil.realtimechatapplication.features.SignUp.SignUpScreen
+
 
 @Composable
 fun MainApp() {
     Surface(modifier = Modifier.fillMaxSize()) {
         val navController = rememberNavController()
 
-        NavHost(navController = navController, startDestination = "signIn") {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val start = if(currentUser != null) "home" else "signIn"
+
+
+        NavHost(navController = navController, startDestination = start) {
             composable("signIn") { SignInScreen(navController) }
             composable("signUp") { SignUpScreen(navController) }
+            composable("home") { HomeScreen(navController) }
         }
     }
 }
