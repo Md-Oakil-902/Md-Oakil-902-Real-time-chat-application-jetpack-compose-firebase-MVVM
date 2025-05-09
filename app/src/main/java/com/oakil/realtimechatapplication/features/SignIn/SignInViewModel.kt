@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
+
 class SignInViewModel @Inject constructor() : ViewModel() {
 
     private val _state = MutableStateFlow<SignInState>(SignInState.Nothing)
