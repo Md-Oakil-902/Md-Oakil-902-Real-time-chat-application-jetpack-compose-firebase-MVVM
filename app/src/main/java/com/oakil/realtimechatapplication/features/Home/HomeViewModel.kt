@@ -33,5 +33,13 @@ class HomeViewModel @Inject constructor(): ViewModel() {
 
     }
 
+    fun addChannel(name: String) {
+        val key = firebaseDatabase.getReference("channel").push().key
+        firebaseDatabase.getReference("channel").child(key!!).setValue(name).addOnSuccessListener {
+            getChannels()
+        }
+
+    }
+
 
 }
