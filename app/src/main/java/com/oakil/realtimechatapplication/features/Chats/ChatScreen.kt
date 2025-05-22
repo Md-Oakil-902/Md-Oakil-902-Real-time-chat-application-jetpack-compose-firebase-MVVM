@@ -114,6 +114,8 @@ fun ChatMessages(
 }
 
 
+
+
 @Composable
 fun ChatBubble(message: Message) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
@@ -130,13 +132,10 @@ fun ChatBubble(message: Message) {
     ) {
         val alignment = if (!isCurrentUser) Alignment.CenterStart else Alignment.CenterEnd
         Box(
-
             modifier = Modifier.padding(8.dp).background(color = bubbleColor, shape = RoundedCornerShape(8.dp)).align(alignment)
         ) {
             Text(text = message.message, color = Color.White, modifier = Modifier.padding(8.dp))
-
         }
-
     }
 
 }
