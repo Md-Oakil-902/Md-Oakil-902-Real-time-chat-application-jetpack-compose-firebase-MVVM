@@ -39,7 +39,7 @@ import com.oakil.realtimechatapplication.features.model.Message
 @Composable
 fun ChatScreen(navController: NavController, channelId: String) {
 
-    Scaffold {
+    Scaffold(modifier = Modifier.background(Color.Black)) {
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(it)) {
@@ -55,7 +55,6 @@ fun ChatScreen(navController: NavController, channelId: String) {
             })
         }
     }
-
 }
 
 
@@ -112,7 +111,6 @@ fun ChatMessages(
     }
 
 }
-
 
 
 

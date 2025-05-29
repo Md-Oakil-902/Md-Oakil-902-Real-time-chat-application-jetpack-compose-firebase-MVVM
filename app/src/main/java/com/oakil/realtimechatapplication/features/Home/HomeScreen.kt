@@ -1,17 +1,19 @@
 package com.oakil.realtimechatapplication.features.Home
 
-import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -33,12 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import java.time.format.TextStyle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +71,6 @@ fun HomeScreen(navController: NavController) {
                     color = Color.White
                 )
             }
-
         },
         containerColor = Color.Black
     ) {
@@ -77,21 +79,23 @@ fun HomeScreen(navController: NavController) {
                 .padding(it)
                 .fillMaxSize()
         ) {
+
             LazyColumn {
                 item {
                     Text(text = "Message", color = Color.Gray, fontSize = 18.sp)
                 }
                 item {
+                    val searchQuery = remember { mutableStateOf("") }
                     TextField(
-                        value = "",
-                        onValueChange = {},
+                        value = searchQuery.value,
+                        onValueChange = { searchQuery.value = it },
                         placeholder = { Text(text = "Search...") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .background(DarkGray)
+                            .background(Color.Gray)
                             .clip(RoundedCornerShape(16.dp)),
-                        textStyle = androidx.compose.ui.text.TextStyle(color = Color.LightGray),
+                        textStyle = androidx.compose.ui.text.TextStyle(color = Color.Red),
                         colors = TextFieldDefaults.colors().copy(
                             focusedContainerColor = Color.Gray,
                             unfocusedContainerColor = Color.Gray,
@@ -111,17 +115,11 @@ fun HomeScreen(navController: NavController) {
                 }
                 items(channels.value) { channel ->
                     Column {
-                        Text(text = channel.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Color.Red.copy(alpha = 0.3f))
-                                .clickable {
-                                    navController.navigate("chat/${channel.id}")
-                                }
-                                .padding(16.dp)
-                        )
+                        ChannelItem(channel.name) {
+                            navController.navigate("chat/${channel.id}")
+                        }
+
+
                     }
                 }
             }
@@ -142,8 +140,40 @@ fun HomeScreen(navController: NavController) {
 
 
 @Composable
-fun ChannelItem(channelName: String, onclick:()->Unit) {
-    
+fun ChannelItem(channelName: String, onclick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(DarkGray)
+            .clickable {
+                onclick()
+            },
+        verticalAlignment = Alignment.CenterVertically
+
+    ) {
+
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .size(45.dp)
+                .clip(CircleShape)
+                .background(Color.Yellow.copy(0.3f))
+        ) {
+            Text(
+                text = channelName[0].uppercase(),
+                style = TextStyle(fontSize = 30.sp),
+                modifier = Modifier.align(alignment = Alignment.Center),
+            )
+        }
+
+        Text(
+            text = channelName,
+            modifier = Modifier.padding(8.dp),
+            color = Color.White,
+            style = TextStyle(fontSize = 20.sp)
+        )
+    }
 }
 
 
@@ -168,5 +198,13 @@ fun AddChannelDialog(onAddChannel: (String) -> Unit) {
             Text(text = "Add")
         }
     }
+
+}
+
+
+@Preview
+@Composable
+fun PreveiwFunction() {
+    ChannelItem("test channel") { }
 
 }
